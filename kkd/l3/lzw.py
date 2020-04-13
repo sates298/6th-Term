@@ -3,31 +3,7 @@ from collections import Counter
 import sys
 import getopt
 import methods
-
-
-def read_file_by_bytes(file):
-    chars = []
-    with open(file, "rb") as f:
-        while byte:= f.read(1):
-            chars.append(byte)
-    return chars
-
-
-def read_file_by_chars(file):
-    text = ''
-    with open(file, "r") as f:
-        text = f.read()
-    return text
-
-
-def write_to_file_chars(file, code):
-    with open(file, 'w') as f:
-        f.write(code)
-
-
-def write_to_file_bytes(file, code):
-    with open(file, 'wb') as f:
-        f.write(code)
+import in_out
 
 
 def entropy(frequency, size):
@@ -131,14 +107,14 @@ def main():
                     decoding_method = methods.elias_omega_dec
 
     if encoding:
-        text = read_file_by_bytes(file_in)
+        text = in_out.read_file_by_bytes(file_in)
         code, compression, entropy = compress(text, coding_method)
-        write_to_file_chars(file_out, code)
+        in_out.write_to_file_chars(file_out, code)
         stats(compression, entropy)
     else:
-        code = read_file_by_chars(file_in)
+        code = in_out.read_file_by_chars(file_in)
         decoded = decompress(code, decoding_method)
-        write_to_file_bytes(file_out, decoded)
+        in_out.write_to_file_bytes(file_out, decoded)
 
 
 def test():

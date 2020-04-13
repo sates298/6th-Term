@@ -91,7 +91,7 @@ def dfs(root):
 
 
 if __name__ == '__main__':
-    tree = generate_tree(4)
+    tree = generate_tree(3)
     print(tree)
 
 # %%

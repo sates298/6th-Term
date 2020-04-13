@@ -1,5 +1,5 @@
 uruchomienie programu:
-nalezy być terminalem w folderze z plikami lzw.py oraz methods.py
+nalezy być terminalem w folderze z plikami lzw.py oraz methods.py oraz in_out.py
 
 python lzw.py <opcje>
 
