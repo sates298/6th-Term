@@ -93,8 +93,8 @@ idft = np.fft.ifft
 # %%
 
 a = [1, 2, 3, 4, 5]
-print(fft([1, 2, 3, 4], 5))
-print(base_dft([1, 2, 3, 4], 5))
+print(ifft([1, 2, 3, 4, 5, 6, 7, 8], 16))
+print(base_idft([1, 2, 3, 4, 5, 6, 7, 8], 16))
 
 
 # %% counting tests
