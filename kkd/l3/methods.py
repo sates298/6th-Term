@@ -15,7 +15,10 @@ def elias_delta(N):
 def elias_delta_dec(code):
     result = []
     while code:
-        L = code.index('1')
+        try:
+            L = code.index('1')
+        except ValueError:
+            break
         code = code[L:]
         N = int(code[:L+1], 2) - 1
         code = code[L+1:]
@@ -36,7 +39,10 @@ def elias_gamma(N):
 def elias_gamma_dec(code):
     result = []
     while code:
-        i = code.index('1')
+        try:
+            i = code.index('1')
+        except ValueError:
+            break
         code = code[i:]
         result.append(int(code[:i+1], 2))
         code = code[i + 1:]

@@ -88,15 +88,11 @@ def ifft_rec(x):
 # %% numpy implementation
 
 def numpy_fft(x, n):
-    diff = n - len(x)
-    x.extend([0 for _ in range(diff)])
-    return np.fft.fft(x)
+    return np.fft.fft(x, n)
 
 
 def numpy_ifft(x, n):
-    diff = n - len(x)
-    x.extend([0 for _ in range(diff)])
-    return np.round(np.real(np.fft.ifft(x))).astype(int)
+    return np.round(np.real(np.fft.ifft(x, n))).astype(int)
 
 
 # %% base tests
@@ -122,11 +118,13 @@ def simple_test(size):
     # print(int(A)*int(B))
 
 
-# simple_test(500_000)
+start1 = time.time()
+simple_test(1_000_000)
+print(time.time() - start1)
 
 
 # %% tests to file
-file_name = 'fastbignum_benchmark.txt'
+file_name = 'fastbignum_benchmark.csv'
 
 
 def avg(x):
@@ -135,46 +133,45 @@ def avg(x):
 
 def write_table(table):
     with open(file_name, 'w') as f:
-        f.write('0. size of nums    1. slow version    2. fast version'
-                '     3. numpy version\n')
+        f.write('size of nums, slow version, fast version, numpy version\n')
         for s, x, y, z in table:
-            f.write(f'{s}: {x} {y} {z}\n')
+            f.write(f'{s}, {x}, {y}, {z}\n')
 
 
 def generate_element(size):
     global dft, idft
-    samples_no = 10
-    base, fast, nump = [], [], []
+    curr_A = ''.join([random.choice("0123456789") for i in range(size)])
+    curr_B = ''.join([random.choice("0123456789") for i in range(size)])
+    a = FastBigNum(curr_A)
+    b = FastBigNum(curr_B)
+    dft = base_dft
+    idft = base_idft
+    start = time.time()
+    a*b
+    base = time.time() - start
+    dft = fft
+    idft = ifft
+    start = time.time()
+    a*b
+    fast = time.time() - start
+    dft = numpy_fft
+    idft = numpy_ifft
+    start = time.time()
+    a*b
+    nump = time.time() - start
 
-    for _ in range(samples_no):
-        curr_A = ''.join([random.choice("0123456789") for i in range(size)])
-        curr_B = ''.join([random.choice("0123456789") for i in range(size)])
-        a = FastBigNum(curr_A)
-        b = FastBigNum(curr_B)
-        dft = base_dft
-        idft = base_idft
-        start = time.time()
-        a*b
-        base.append(time.time() - start)
-        dft = fft
-        idft = ifft
-        start = time.time()
-        a*b
-        fast.append(time.time() - start)
-        dft = numpy_fft
-        idft = numpy_ifft
-        start = time.time()
-        a*b
-        nump.append(time.time() - start)
-
-    return (size, avg(base), avg(fast), avg(nump))
+    return (size, base, fast, nump)
 
 
 def final_test():
-    table = [generate_element(100_000),
-             generate_element(500_000),
-             generate_element(1_000_000)]
-    write_table(table)
+    samples_no = 10
+    sizes = [100_000, 500_000, 1_000_000]
+    with open(file_name, 'w') as f:
+        f.write('size of nums, slow version, fast version, numpy version\n')
+        for s in sizes:
+            for _ in range(samples_no):
+                _, x, y, z = generate_element(s)
+                f.write(f'{s}, {x}, {y}, {z}\n')
 
 
 # final_test()

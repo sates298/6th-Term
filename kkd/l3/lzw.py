@@ -79,6 +79,7 @@ def main():
     opts, _ = getopt.gnu_getopt(sys.argv[1:], 'edi:o:',
                                 ['gamma', 'delta', 'fibb', 'omega'])
     encoding = True
+    is_omega = True
     for opt, arg in opts:
         if opt == '-i':
             file_in = arg
@@ -87,10 +88,13 @@ def main():
         elif opt == '-e':
             for opt1, _ in opts:
                 if opt1 == '--gamma':
+                    is_omega = False
                     coding_method = methods.elias_gamma
                 elif opt1 == '--delta':
+                    is_omega = False
                     coding_method = methods.elias_delta
                 elif opt1 == '--fibb':
+                    is_omega = False
                     coding_method = methods.fibbonacci
                 elif opt1 == '--omega':
                     coding_method = methods.elias_omega
@@ -98,10 +102,13 @@ def main():
             encoding = False
             for opt1, _ in opts:
                 if opt1 == '--gamma':
+                    is_omega = False
                     decoding_method = methods.elias_gamma_dec
                 elif opt1 == '--delta':
+                    is_omega = False
                     decoding_method = methods.elias_delta_dec
                 elif opt1 == '--fibb':
+                    is_omega = False
                     decoding_method = methods.fibbonacci_dec
                 elif opt1 == '--omega':
                     decoding_method = methods.elias_omega_dec
@@ -109,10 +116,10 @@ def main():
     if encoding:
         text = in_out.read_file_by_bytes(file_in)
         code, compression, entropy = compress(text, coding_method)
-        in_out.write_to_file_chars(file_out, code)
+        in_out.write_to_file_bytes_string(file_out, code, is_omega)
         stats(compression, entropy)
     else:
-        code = in_out.read_file_by_chars(file_in)
+        code = in_out.read_file_by_bytes_to_bits(file_in)
         decoded = decompress(code, decoding_method)
         in_out.write_to_file_bytes(file_out, decoded)
 

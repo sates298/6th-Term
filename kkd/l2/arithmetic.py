@@ -184,10 +184,10 @@ def main():
     if encoding:
         text = in_out.read_file_by_bytes(file_in)
         code = encode(text)
-        in_out.write_to_file_chars(file_out, ''.join(code))
+        in_out.write_to_file_bytes_string(file_out, ''.join(code))
         stats(text, code)
     else:
-        code = in_out.read_file_by_chars(file_in)
+        code = in_out.read_file_by_bytes_to_bits(file_in)
         byte_text = decode(code)
         in_out.write_to_file_bytes(file_out, byte_text)
 
