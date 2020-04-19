@@ -13,37 +13,47 @@ def salomon(x):
 
 
 def p(delta, c, T):
-    return 1/(1+exp(c*delta/T))
+    try:
+        ans = 0 if delta < 0 else exp(c*delta/T)
+    except OverflowError:
+        ans = float('inf')
+    return 1/(1+ans)
 
 
-def get_neighbour(x, eps):
+def get_neighbour(x, eps, rep):
     size = len(x)
-    f, s = random.sample(list(range(size)), k=2)
-    f1, s1 = random.choices([-eps, 0, eps], k=2)
-    neighbour = x.copy()
-    neighbour[f] += f1
-    neighbour[s] += s1
-    return neighbour
+    changes = random.choices([-eps, 0, eps], k=size)
+
+    return tuple(x[i] + changes[i]*rep for i in range(size))
 
 
 def annealing(f, start_pnt, t_max):
-    T = 37
-    red_factor = 0.3
+    T = 1_000_000
+    last_epsilon = 0.00000000000001
+    epsilon = 0.005
+    red_factor = 0.05
     t_start = time.time()
     c = .5 + .5*random.random()
     best_x = start_pnt
     best_y = f(best_x)
-    while T > 0:
-        x_p = get_neighbour(best_x)
+    iter = 0
+    while T > last_epsilon:
+        x_p = get_neighbour(best_x, epsilon, iter)
         y_p = f(x_p)
         del_f = -(best_y - y_p)
         r = random.random()
         if p(del_f, c, T) > r:
             best_x = x_p
             best_y = y_p
+            if del_f < 10**(-6):
+                iter += 1
+            else:
+                iter = 0
+        else:
+            iter += 1
         T = (1 - red_factor)*T
         t_curr = time.time() - t_start
-        if t_curr < t_max:
+        if t_curr >= t_max:
             break
 
     return best_x, best_y
@@ -52,7 +62,7 @@ def annealing(f, start_pnt, t_max):
 def main():
     in_ = list(map(lambda x: int(x), stdin.read().split()))
     out_ = annealing(salomon, in_[1:], in_[0])
-    stdout.write(' '.join(map(lambda x: str(x), out_)) + '\n')
+    stdout.write(' '.join(map(lambda x: str(x), out_[0])) + f' {out_[1]}\n')
 
 
 if __name__ == '__main__':

@@ -118,9 +118,9 @@ def simple_test(size):
     # print(int(A)*int(B))
 
 
-start1 = time.time()
-simple_test(1_000_000)
-print(time.time() - start1)
+# start1 = time.time()
+# simple_test(1_000_000)
+# print(time.time() - start1)
 
 
 # %% tests to file
@@ -144,11 +144,12 @@ def generate_element(size):
     curr_B = ''.join([random.choice("0123456789") for i in range(size)])
     a = FastBigNum(curr_A)
     b = FastBigNum(curr_B)
-    dft = base_dft
-    idft = base_idft
-    start = time.time()
-    a*b
-    base = time.time() - start
+    # dft = base_dft
+    # idft = base_idft
+    # start = time.time()
+    # a*b
+    # base = time.time() - start
+    base = 'N/A'
     dft = fft
     idft = ifft
     start = time.time()
@@ -164,7 +165,7 @@ def generate_element(size):
 
 
 def final_test():
-    samples_no = 10
+    samples_no = 5
     sizes = [100_000, 500_000, 1_000_000]
     with open(file_name, 'w') as f:
         f.write('size of nums, slow version, fast version, numpy version\n')
@@ -174,5 +175,5 @@ def final_test():
                 f.write(f'{s}, {x}, {y}, {z}\n')
 
 
-# final_test()
+final_test()
 # generate_element(1000)
