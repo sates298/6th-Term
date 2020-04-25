@@ -99,9 +99,8 @@ class Matrix():
         for i in range(blocks_h):
             self.matrix[i][-1].w += mod_w
         for i in range(blocks_w):
-            self.matrix[-1][i].w += mod_h
+            self.matrix[-1][i].h += mod_h
         return self
-
 
     def to_matrix(self):
         matrix = [[0 for _ in range(self.f_width)]
@@ -110,8 +109,7 @@ class Matrix():
             for block in row:
                 for i in range(block.x, block.x + block.w):
                     for j in range(block.y, block.y + block.h):
-                        print(i, ' ', j)
-                        # matrix[j][i] = block.color
+                        matrix[j][i] = block.color
         return matrix
 
 
