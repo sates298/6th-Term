@@ -1,6 +1,7 @@
 from methods import methods_map
 from math import log2
 from collections import Counter
+import sys
 
 
 def from_tga(filename):
@@ -121,7 +122,7 @@ def test_for_methods_map(original, w, h):
 
 
 def main():
-    file = 'tests/example0.tga'
+    file = sys.argv[1]
     (w, h), triples = from_tga(file)
     print_entropy(triples, 'Original')
     test_for_methods_map(triples, w, h)

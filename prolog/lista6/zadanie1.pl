@@ -1,35 +1,39 @@
-program --> [ ]; instruction, [;], program.
+:- ['../lista5/zadanie1'].
 
-instruction --> ident ,[:=], expression.
-instruction --> [read], ident.
-instruction --> [write], expression.
-instruction --> [if], condition, [then], program, [fi].
-instruction --> [if], condition, [then], program, [else], program, [fi].
-instruction --> [while], condition, [do], program, [od].
+program([]) --> [].
+program([I | P]) --> instruction(I), [sep(;)], program(P).
 
-expression --> ingredient, [+], expression.
-expression --> ingredient, [-], expression.
-expression --> ingredient.
+instruction(assign(ID, EX)) --> [id(ID)], [sep(:=)], expression(EX).
+instruction(read(ID)) --> [key(read)], [id(ID)].
+instruction(write(EXPR)) --> [key(write)], expression(EXPR).
+instruction(if(CND, PRG)) --> [key(if)], condition(CND), [key(then)], program(PRG), [key(fi)].
+instruction(if(CND, PRG, ELS)) --> [key(if)], condition(CND), [key(then)], program(PRG),
+    [key(else)], program(ELS), [key(fi)].
+instruction(while(CND, PRG)) --> [key(while)], condition(CND), [key(do)], program(PRG), [key(od)].
 
-ingredient --> factor, [*], ingredient.
-ingredient --> factor, [/], ingredient.
-ingredient --> factor, [mod], ingredient.
-ingredient --> factor.
+expression(C + E) --> ingredient(C), [sep(+)], expression(E).
+expression(C - E) --> ingredient(C), [sep(-)], expression(E).
+expression(C) --> ingredient(C).
 
-factor --> ident.
-factor --> natural.
-factor --> ['('], expression, [')'].
+ingredient(E * C) --> factor(E), [sep(*)], ingredient(C).
+ingredient(E / C) --> factor(E), [sep(/)], ingredient(C).
+ingredient(E mod C) --> factor(E), [key(mod)], ingredient(C).
+ingredient(E) --> factor(E).
 
-condition --> conjuction, [or], condition.
-condition --> conjuction.
+factor(id(E)) --> [id(E)].
+factor(int(E)) --> [int(E)].
+factor(E) --> [sep('(')], expression(E), [sep(')')].
 
-conjuction --> simple, [and], conjuction.
-conjuction --> simple.
+condition(C1; C2) --> conjunction(C1), [key(or)], condition(C2).
+condition(C) --> conjunction(C).
 
-simple --> expression, [=], expression.
-simple --> expression, [/=], expression.
-simple --> expression, [<], expression.
-simple --> expression, [>], expression.
-simple --> expression, [>=], expression.
-simple --> expression, [=<], expression.
-simple --> ['('], condition, [')'].
+conjunction(S ',' C) --> simple(S), [key(and)], conjunction(C).
+conjunction(S) --> simple(S).
+
+simple(E1 =:= E2) --> expression(E1), [sep(=)], expression(E2).
+simple(E1 =\= E2) --> expression(E1), [sep(/=)], expression(E2).
+simple(E1 < E2) --> expression(E1), [sep(<)], expression(E2).
+simple(E1 > E2) --> expression(E1), [sep(>)], expression(E2).
+simple(E1 >= E2) --> expression(E1), [sep(>=)], expression(E2).
+simple(E1 =< E2) --> expression(E1), [sep(<=)], expression(E2).
+simple(C) --> [sep('(')], condition(C), [sep(')')].
